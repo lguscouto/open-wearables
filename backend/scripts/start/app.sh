@@ -21,6 +21,10 @@ uv run python scripts/init_device_priorities.py
 echo 'Seeding admin account...'
 uv run python scripts/init/seed_admin.py
 
+# Seed Zepp connection if credentials configured
+echo 'Seeding Zepp user connection...'
+uv run python scripts/init/seed_zepp_user.py || echo "Zepp seed skipped."
+
 # Initialize series type definitions
 echo 'Initializing series type definitions...'
 uv run python scripts/init/seed_series_types.py

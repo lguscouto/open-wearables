@@ -55,9 +55,10 @@ class GoogleOAuth(BaseOAuthTemplate):
         """Build Google's authorization URL.
 
         Adds the Google-specific parameters the base template doesn't emit:
-        ``access_type=offline`` (return a refresh token), ``prompt=consent``
-        (always return one), and ``include_granted_scopes=true`` (incremental
-        authorization).
+        ``access_type=offline`` (return a refresh token) and ``prompt=consent``
+        (always return one). We do NOT pass ``include_granted_scopes=true``
+        because Google Health API strictly rejects tokens that contain unrelated
+        scopes (e.g. Drive, Gmail, legacy Fitness) with DISALLOWED_OAUTH_SCOPES.
         """
         params = {
             "response_type": "code",
@@ -66,7 +67,6 @@ class GoogleOAuth(BaseOAuthTemplate):
             "state": state,
             "scope": self.credentials.default_scope,
             "access_type": "offline",
-            "include_granted_scopes": "true",
             "prompt": "consent",
         }
         return f"{self.endpoints.authorize_url}?{urlencode(params)}", None
